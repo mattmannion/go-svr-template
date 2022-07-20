@@ -17,6 +17,8 @@ func main() {
 	dsn := viper.Get("DSN").(string)
 
 	g := gin.Default()
+	g.SetTrustedProxies([]string{""})
+
 	db := db.Init(dsn)
 
 	users.RegisterRoutes(g, db)
