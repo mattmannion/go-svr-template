@@ -1,6 +1,7 @@
 package users
 
 import (
+	"fmt"
 	"mm/pkg/src/db/models"
 	"mm/pkg/src/util"
 	"net/http"
@@ -13,10 +14,11 @@ func (c controller) DeleteUser(g *gin.Context) {
 
 	var user models.Users
 
-	if res := c.DB.First(&user, id); res.Error != nil {
+	res := c.DB.First(&user, id)
+	if res.Error != nil {
 		g.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "Failure",
-			Message: "User not found...",
+			Message: fmt.Sprintf("%s", res.Error),
 		})
 		return
 	}
@@ -25,6 +27,6 @@ func (c controller) DeleteUser(g *gin.Context) {
 
 	g.JSON(http.StatusOK, util.JSON_MSG{
 		Status:  "Success",
-		Message: "User successful",
+		Message: "User " + id + " deleted",
 	})
 }

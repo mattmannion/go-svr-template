@@ -1,6 +1,7 @@
 package users
 
 import (
+	"fmt"
 	"mm/pkg/src/db/models"
 	"mm/pkg/src/util"
 	"net/http"
@@ -12,10 +13,11 @@ func (c controller) GetUsers(g *gin.Context) {
 
 	var users []models.Users
 
-	if res := c.DB.Find(&users); res.Error != nil {
+	res := c.DB.Find(&users)
+	if res.Error != nil {
 		g.JSON(http.StatusNotFound, util.JSON_MSG{
 			Status:  "failure",
-			Message: "no users found",
+			Message: fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}

@@ -1,6 +1,7 @@
 package users
 
 import (
+	"fmt"
 	"mm/pkg/src/db/models"
 	"mm/pkg/src/util"
 	"net/http"
@@ -11,12 +12,13 @@ import (
 
 func (c controller) UpdateUser(g *gin.Context) {
 	id := g.Param("id")
-	json := models.UsersJSON{}
+	body := models.Users{}
 
-	if err := g.BindJSON(&json); err != nil {
+	err := g.BindJSON(&body)
+	if err != nil {
 		g.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "failure",
-			Message: "Could not bind JSON",
+			Message: fmt.Sprintf("%s...", err),
 		})
 		return
 	}
@@ -27,24 +29,23 @@ func (c controller) UpdateUser(g *gin.Context) {
 	if res.Error != nil {
 		g.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "failure",
-			Message: "Could not find user...",
+			Message: fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}
 
 	ID, str_err := strconv.Atoi(id)
-
 	if str_err != nil {
 		g.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "failure",
-			Message: "Could not convert id...",
+			Message: fmt.Sprintf("%s...", str_err),
 		})
 		return
 	}
 
 	user.ID = (uint(ID))
-	user.FirstName = json.FirstName
-	user.LastName = json.LastName
+	user.FirstName = body.FirstName
+	user.LastName = body.LastName
 
 	c.DB.Save(&user)
 

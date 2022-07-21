@@ -14,12 +14,11 @@ func main() {
 	viper.ReadInConfig()
 
 	port := viper.Get("PORT").(string)
-	dsn := viper.Get("DSN").(string)
 
 	g := gin.Default()
 	g.SetTrustedProxies([]string{""})
 
-	db := db.Init(dsn)
+	db := db.Init(viper.Get("DSN").(string))
 
 	users.RegisterRoutes(g, db)
 

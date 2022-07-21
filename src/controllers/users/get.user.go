@@ -1,6 +1,7 @@
 package users
 
 import (
+	"fmt"
 	"mm/pkg/src/db/models"
 	"mm/pkg/src/util"
 	"net/http"
@@ -17,7 +18,7 @@ func (c controller) GetUser(g *gin.Context) {
 	if res.Error != nil {
 		g.JSON(http.StatusNotFound, util.JSON_MSG{
 			Status:  "failure",
-			Message: "User not found...",
+			Message: fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}
