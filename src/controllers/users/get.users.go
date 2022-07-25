@@ -9,11 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c controller) GetUsers(g *gin.Context) {
+func (db controller) GetUsers(g *gin.Context) {
 
 	var users []models.Users
 
-	res := c.DB.Find(&users)
+	res := db.DB.Order("id").Find(&users)
 	if res.Error != nil {
 		g.JSON(http.StatusNotFound, util.JSON_MSG{
 			Status:  "failure",

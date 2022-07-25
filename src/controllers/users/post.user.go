@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c controller) PostUser(g *gin.Context) {
+func (db controller) PostUser(g *gin.Context) {
 	body := models.Users{}
 
 	err := g.BindJSON(&body)
@@ -27,7 +27,7 @@ func (c controller) PostUser(g *gin.Context) {
 	user.FirstName = body.FirstName
 	user.LastName = body.LastName
 
-	res := c.DB.Create(&user)
+	res := db.DB.Create(&user)
 	if res.Error != nil {
 		g.JSON(http.StatusNotFound, util.JSON_MSG{
 			Status:  "failure",

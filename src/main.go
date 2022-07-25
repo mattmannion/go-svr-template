@@ -4,24 +4,28 @@ import (
 	"fmt"
 	"mm/pkg/src/controllers/users"
 	"mm/pkg/src/db"
+	"mm/pkg/src/env"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 )
 
 func main() {
-	viper.SetConfigFile("./src/env/.env")
-	viper.ReadInConfig()
-
-	port := viper.Get("PORT").(string)
+	cfg, err := env.LoadConfig()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	g := gin.Default()
 	g.SetTrustedProxies([]string{""})
 
-	db := db.Init(viper.Get("DSN").(string))
+	DB := db.Init(cfg.DSN)
 
-	users.RegisterRoutes(g, db)
+	users.RegisterRoutes(g, DB)
+	if cfg.Env == "dev" {
+		db.Seed()
+		fmt.Println("db seeded")
+	}
 
-	fmt.Println("live @ http://localhost" + port)
-	g.Run(port)
+	fmt.Println("live @ http://localhost" + cfg.Port)
+	g.Run(cfg.Port)
 }

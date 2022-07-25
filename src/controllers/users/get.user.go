@@ -9,12 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c controller) GetUser(g *gin.Context) {
+func (db controller) GetUser(g *gin.Context) {
 	id := g.Param("id")
 
 	var user models.Users
 
-	res := c.DB.First(&user, id)
+	res := db.DB.First(&user, id)
 	if res.Error != nil {
 		g.JSON(http.StatusNotFound, util.JSON_MSG{
 			Status:  "failure",

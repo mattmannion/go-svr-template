@@ -10,13 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c controller) UpdateUser(g *gin.Context) {
-	id := g.Param("id")
+func (db controller) UpdateUser(c *gin.Context) {
+	id := c.Param("id")
 	body := models.Users{}
 
-	err := g.BindJSON(&body)
+	err := c.BindJSON(&body)
 	if err != nil {
-		g.JSON(http.StatusBadRequest, util.JSON_MSG{
+		c.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "failure",
 			Message: fmt.Sprintf("%s...", err),
 		})
@@ -25,9 +25,9 @@ func (c controller) UpdateUser(g *gin.Context) {
 
 	var user models.Users
 
-	res := c.DB.First(&user, id)
+	res := db.DB.First(&user, id)
 	if res.Error != nil {
-		g.JSON(http.StatusBadRequest, util.JSON_MSG{
+		c.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "failure",
 			Message: fmt.Sprintf("%s...", res.Error),
 		})
@@ -36,7 +36,7 @@ func (c controller) UpdateUser(g *gin.Context) {
 
 	ID, str_err := strconv.Atoi(id)
 	if str_err != nil {
-		g.JSON(http.StatusBadRequest, util.JSON_MSG{
+		c.JSON(http.StatusBadRequest, util.JSON_MSG{
 			Status:  "failure",
 			Message: fmt.Sprintf("%s...", str_err),
 		})
@@ -47,9 +47,9 @@ func (c controller) UpdateUser(g *gin.Context) {
 	user.FirstName = body.FirstName
 	user.LastName = body.LastName
 
-	c.DB.Save(&user)
+	db.DB.Save(&user)
 
-	g.JSON(http.StatusOK, JSON{
+	c.JSON(http.StatusOK, JSON{
 		Status: "success",
 		User:   user,
 	})

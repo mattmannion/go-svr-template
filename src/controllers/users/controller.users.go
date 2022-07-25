@@ -17,21 +17,36 @@ type JSON struct {
 }
 
 func RegisterRoutes(g *gin.Engine, db *gorm.DB) {
-	c := &controller{
-		DB: db,
-	}
+	c := &controller{DB: db}
 
-	r := g.Group("/users")
+	users := g.Group("/users")
 	{
-		r.GET("", c.GetUsers)
-		r.POST("", c.PostUser)
+		users.GET("", c.GetUsers)
+		users.POST("", c.PostUser)
 
-		id := r.Group("/:id")
+		id := users.Group("/:id")
 		{
 			id.GET("", c.GetUser)
-			id.PUT("", c.UpdateUser)
-			id.DELETE("", c.DeleteUser)
+			id_auth := id.Group("")
+			// auth middleware here
+			// id_auth.Use()
+			{
+				id_auth.PUT("", c.UpdateUser)
+				id_auth.DELETE("", c.DeleteUser)
+			}
 		}
 	}
-
 }
+
+// session middlware example
+// func AuthRequired(c *gin.Context) {
+// 	session := sessions.Default(c)
+// 	user := session.Get(userkey)
+// 	if user == nil {
+// 		// Abort the request with the appropriate error code
+// 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+// 		return
+// 	}
+// 	// Continue down the chain to handler etc
+// 	c.Next()
+// }

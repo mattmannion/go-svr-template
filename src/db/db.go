@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"mm/pkg/src/db/models"
 
@@ -8,18 +9,35 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+var err error
+
 func Init(url string) *gorm.DB {
-	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(url), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	err = db.AutoMigrate(&models.Users{})
+	err = DB.AutoMigrate(&models.Users{})
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	return db
+	fmt.Println("db connected")
+
+	return DB
+}
+
+func Seed() {
+	DB.Raw("truncate users;").Scan(&models.Users{})
+	DB.Raw("alter sequence users_id_seq restart; ").Scan(&models.Users{})
+	DB.Raw(`
+	insert into users(firstname, lastname)
+		values
+		('matt', 'mannion'),
+		('mack', 'gr'),
+		('khris', 'rhodes');
+	`).Scan(&models.Users{})
 }
