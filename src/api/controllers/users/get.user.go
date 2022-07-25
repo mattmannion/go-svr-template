@@ -1,10 +1,10 @@
 package users
 
 import (
-	"_/src/db"
-	"_/src/db/models"
 	"fmt"
 	"net/http"
+	"root/src/db"
+	"root/src/db/models"
 
 	"github.com/gin-gonic/gin"
 )

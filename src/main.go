@@ -1,10 +1,10 @@
 package main
 
 import (
-	"_/src/db"
-	"_/src/env"
-	"_/src/routers"
 	"fmt"
+	"root/src/api/routers"
+	"root/src/db"
+	"root/src/env"
 
 	"github.com/gin-gonic/gin"
 )

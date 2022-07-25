@@ -1,11 +1,11 @@
 package db
 
 import (
-	"_/src/db/models"
-	"_/src/db/sql"
-	"_/src/env"
 	"fmt"
 	"log"
+	"root/src/db/models"
+	"root/src/db/sql"
+	"root/src/env"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
