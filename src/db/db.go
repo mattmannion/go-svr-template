@@ -1,9 +1,10 @@
 package db
 
 import (
+	"core/src/db/models"
+	"core/src/env"
 	"fmt"
 	"log"
-	"mm/pkg/src/db/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,8 +13,8 @@ import (
 var DB *gorm.DB
 var err error
 
-func Init(url string) *gorm.DB {
-	DB, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+func Init(cfg env.Cfg) {
+	DB, err = gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)
@@ -27,17 +28,21 @@ func Init(url string) *gorm.DB {
 
 	fmt.Println("db connected")
 
-	return DB
+	if cfg.Env == "dev" {
+		Seed(DB)
+	}
 }
 
-func Seed() {
-	DB.Raw("truncate users;").Scan(&models.Users{})
-	DB.Raw("alter sequence users_id_seq restart; ").Scan(&models.Users{})
-	DB.Raw(`
+func Seed(db *gorm.DB) {
+	db.Raw("truncate users;").Scan(&models.Users{})
+	db.Raw("alter sequence users_id_seq restart;").Scan(&models.Users{})
+	db.Raw(`
 	insert into users(firstname, lastname)
 		values
 		('matt', 'mannion'),
 		('mack', 'gr'),
 		('khris', 'rhodes');
 	`).Scan(&models.Users{})
+
+	fmt.Println("db seeded")
 }

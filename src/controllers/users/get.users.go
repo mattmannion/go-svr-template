@@ -1,21 +1,21 @@
 package users
 
 import (
+	"core/src/db"
+	"core/src/db/models"
 	"fmt"
-	"mm/pkg/src/db/models"
-	"mm/pkg/src/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func (db controller) GetUsers(g *gin.Context) {
+func GetUsers(g *gin.Context) {
 
 	var users []models.Users
 
 	res := db.DB.Order("id").Find(&users)
 	if res.Error != nil {
-		g.JSON(http.StatusNotFound, util.JSON_MSG{
+		g.JSON(http.StatusNotFound, models.JSON_MSG{
 			Status:  "failure",
 			Message: fmt.Sprintf("%s...", res.Error),
 		})

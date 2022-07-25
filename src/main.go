@@ -1,10 +1,10 @@
 package main
 
 import (
+	"core/src/db"
+	"core/src/env"
+	"core/src/routers"
 	"fmt"
-	"mm/pkg/src/controllers/users"
-	"mm/pkg/src/db"
-	"mm/pkg/src/env"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,13 +18,9 @@ func main() {
 	g := gin.Default()
 	g.SetTrustedProxies([]string{""})
 
-	DB := db.Init(cfg.DSN)
+	db.Init(cfg)
 
-	users.RegisterRoutes(g, DB)
-	if cfg.Env == "dev" {
-		db.Seed()
-		fmt.Println("db seeded")
-	}
+	routers.Routers(g)
 
 	fmt.Println("live @ http://localhost" + cfg.Port)
 	g.Run(cfg.Port)
