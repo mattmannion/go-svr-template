@@ -1,8 +1,8 @@
 package users
 
 import (
-	"core/src/db"
-	"core/src/db/models"
+	"_/src/db"
+	"_/src/db/models"
 	"fmt"
 	"net/http"
 

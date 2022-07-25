@@ -1,6 +1,6 @@
 package routers
 
-import "core/src/controllers/users"
+import "_/src/controllers/users"
 
 func (r *router) UserRouter() {
 

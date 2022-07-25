@@ -1,9 +1,9 @@
 package main
 
 import (
-	"core/src/db"
-	"core/src/env"
-	"core/src/routers"
+	"_/src/db"
+	"_/src/env"
+	"_/src/routers"
 	"fmt"
 
 	"github.com/gin-gonic/gin"

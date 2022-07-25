@@ -1,8 +1,8 @@
 package db
 
 import (
-	"core/src/db/models"
-	"core/src/env"
+	"_/src/db/models"
+	"_/src/env"
 	"fmt"
 	"log"
 

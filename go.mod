@@ -1,4 +1,4 @@
-module core
+module _
 
 go 1.18
 
