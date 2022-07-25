@@ -16,15 +16,21 @@ func main() {
 		fmt.Println(err)
 	}
 
-	g := gin.Default()
-	g.SetTrustedProxies([]string{""})
+	gin.SetMode(gin.ReleaseMode)
+
+	svr := gin.New()
+
+	svr.Use(gin.Logger())
+	svr.Use(gin.Recovery())
+
+	svr.SetTrustedProxies([]string{""})
 
 	session_store := db.Init(cfg)
 
-	g.Use(sessions.Sessions(cfg.Session_Name, session_store))
+	svr.Use(sessions.Sessions(cfg.Session_Name, session_store))
 
-	routers.Routers(g)
+	routers.Routers(svr)
 
 	fmt.Println("live @ http://localhost" + cfg.Port)
-	g.Run(cfg.Port)
+	svr.Run(cfg.Port)
 }

@@ -9,9 +9,10 @@ import (
 
 func Auth(c *gin.Context) {
 	session := sessions.Default(c)
-	sessionID := session.Get("id")
 
-	if sessionID == nil {
+	username := session.Get("username")
+
+	if username == nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "failure",
 			"message": "Please login",

@@ -10,6 +10,7 @@ import (
 	"github.com/gin-contrib/sessions/redis"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
@@ -22,7 +23,9 @@ func Init(cfg env.Cfg) redis.Store {
 
 	fmt.Println("redis connected")
 
-	DB, err = gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 
 	if err != nil {
 		log.Fatalln(err)
