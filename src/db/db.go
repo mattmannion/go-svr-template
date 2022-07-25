@@ -2,6 +2,7 @@ package db
 
 import (
 	"_/src/db/models"
+	"_/src/db/sql"
 	"_/src/env"
 	"fmt"
 	"log"
@@ -34,15 +35,8 @@ func Init(cfg env.Cfg) {
 }
 
 func Seed(db *gorm.DB) {
-	db.Raw("truncate users;").Scan(&models.Users{})
-	db.Raw("alter sequence users_id_seq restart;").Scan(&models.Users{})
-	db.Raw(`
-	insert into users(firstname, lastname)
-		values
-		('matt', 'mannion'),
-		('mack', 'gr'),
-		('khris', 'rhodes');
-	`).Scan(&models.Users{})
-
+	db.Raw(sql.Util_truncate_tables_query).Scan(&models.Users{})
+	db.Raw(sql.Util_reset_primary_id_query).Scan(&models.Users{})
+	db.Raw(sql.Util_insert_default_users_query).Scan(&models.Users{})
 	fmt.Println("db seeded")
 }
