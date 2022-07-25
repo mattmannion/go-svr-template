@@ -12,6 +12,7 @@ import (
 
 func main() {
 	cfg, err := env.LoadConfig()
+
 	if err != nil {
 		fmt.Println(err)
 	}
