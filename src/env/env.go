@@ -5,9 +5,12 @@ import (
 )
 
 type Cfg struct {
-	Env  string `mapstructure:"ENV"`
-	Port string `mapstructure:"PORT"`
-	DSN  string `mapstructure:"DSN"`
+	Env          string `mapstructure:"ENV"`
+	Port         string `mapstructure:"PORT"`
+	DSN          string `mapstructure:"DSN"`
+	Session_Name string `mapstructure:"SESSION_NAME"`
+	Redis_Addr   string `mapstructure:"REDIS_ADDR"`
+	Redis_Secret string `mapstructure:"REDIS_SECRET"`
 }
 
 func LoadConfig() (c Cfg, err error) {

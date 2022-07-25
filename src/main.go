@@ -7,7 +7,6 @@ import (
 	"root/src/env"
 
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,14 +19,9 @@ func main() {
 	g := gin.Default()
 	g.SetTrustedProxies([]string{""})
 
-	store, err := redis.NewStore(10, "tcp", "localhost:6379", "", []byte("secret"))
-	if err != nil {
-		fmt.Println(err)
-	}
+	session_store := db.Init(cfg)
 
-	g.Use(sessions.Sessions("mysession", store))
-
-	db.Init(cfg)
+	g.Use(sessions.Sessions(cfg.Session_Name, session_store))
 
 	routers.Routers(g)
 

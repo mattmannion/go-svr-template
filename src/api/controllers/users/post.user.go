@@ -9,12 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostUser(g *gin.Context) {
+func PostUser(c *gin.Context) {
 	body := models.Users{}
 
-	err := g.BindJSON(&body)
+	err := c.BindJSON(&body)
 	if err != nil {
-		g.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", err),
 		})
@@ -29,14 +29,14 @@ func PostUser(g *gin.Context) {
 
 	res := db.DB.Create(&user)
 	if res.Error != nil {
-		g.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}
 
-	g.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"status": "success",
 		"user":   user,
 	})

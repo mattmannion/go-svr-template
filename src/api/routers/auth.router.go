@@ -9,7 +9,7 @@ func (r *router) AuthRouter() {
 
 	a := r.eng.Group("/auth")
 	{
-		a.POST("", auth.GetAuth)
+		a.POST("", auth.PostAuth)
 		a.DELETE("", auth.DeleteAuth)
 
 		a_auth := a.Group("")

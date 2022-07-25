@@ -7,14 +7,21 @@ import (
 	"root/src/db/sql"
 	"root/src/env"
 
+	"github.com/gin-contrib/sessions/redis"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
-var err error
 
-func Init(cfg env.Cfg) {
+func Init(cfg env.Cfg) redis.Store {
+	session_store, err := redis.NewStore(10, "tcp", cfg.Redis_Addr, "", []byte(cfg.Redis_Secret))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("redis connected")
+
 	DB, err = gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{})
 
 	if err != nil {
@@ -33,6 +40,8 @@ func Init(cfg env.Cfg) {
 		SeedUsers(DB)
 		fmt.Println("db seeded")
 	}
+
+	return session_store
 }
 
 func SeedUsers(db *gorm.DB) {

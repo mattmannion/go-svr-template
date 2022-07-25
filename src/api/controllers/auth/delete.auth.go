@@ -9,8 +9,11 @@ import (
 
 func DeleteAuth(c *gin.Context) {
 	session := sessions.Default(c)
+
 	session.Clear()
+
 	session.Save()
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User Sign out successfully",
 	})
