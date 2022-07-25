@@ -13,7 +13,8 @@ func Auth(c *gin.Context) {
 
 	if sessionID == nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"message": "unauthorized",
+			"status":  "failure",
+			"message": "Please login",
 		})
 
 		c.Abort()
