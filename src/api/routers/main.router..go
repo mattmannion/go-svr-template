@@ -10,4 +10,5 @@ func Routers(eng *gin.Engine) {
 	r := &router{eng: eng}
 
 	r.UserRouter()
+	r.AuthRouter()
 }

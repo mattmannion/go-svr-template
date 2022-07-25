@@ -16,15 +16,15 @@ func GetUser(g *gin.Context) {
 
 	res := db.DB.First(&user, id)
 	if res.Error != nil {
-		g.JSON(http.StatusNotFound, models.JSON_MSG{
-			Status:  "failure",
-			Message: fmt.Sprintf("%s...", res.Error),
+		g.JSON(http.StatusNotFound, gin.H{
+			"status":  "failure",
+			"message": fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}
 
-	g.JSON(http.StatusOK, models.JSON{
-		Status: "success",
-		User:   user,
+	g.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"user":   user,
 	})
 }

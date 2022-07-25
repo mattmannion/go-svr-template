@@ -1,6 +1,9 @@
 package routers
 
-import "root/src/api/controllers/users"
+import (
+	"root/src/api/controllers/users"
+	"root/src/api/middleware"
+)
 
 func (r *router) UserRouter() {
 
@@ -13,8 +16,8 @@ func (r *router) UserRouter() {
 		{
 			id.GET("", users.GetUser)
 			id_auth := id.Group("")
-			// auth middleware here
-			// id_auth.Use()
+
+			id_auth.Use(middleware.Auth)
 			{
 				id_auth.PUT("", users.UpdateUser)
 				id_auth.DELETE("", users.DeleteUser)
@@ -22,16 +25,3 @@ func (r *router) UserRouter() {
 		}
 	}
 }
-
-// session middlware example
-// func AuthRequired(c *gin.Context) {
-// 	session := sessions.Default(c)
-// 	user := session.Get(userkey)
-// 	if user == nil {
-// 		// Abort the request with the appropriate error code
-// 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-// 		return
-// 	}
-// 	// Continue down the chain to handler etc
-// 	c.Next()
-// }

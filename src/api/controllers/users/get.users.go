@@ -15,20 +15,15 @@ func GetUsers(g *gin.Context) {
 
 	res := db.DB.Order("id").Find(&users)
 	if res.Error != nil {
-		g.JSON(http.StatusNotFound, models.JSON_MSG{
-			Status:  "failure",
-			Message: fmt.Sprintf("%s...", res.Error),
+		g.JSON(http.StatusNotFound, gin.H{
+			"status":  "failure",
+			"message": fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}
 
-	type JSON struct {
-		Status string         `json:"status"`
-		Users  []models.Users `json:"users"`
-	}
-
-	g.JSON(http.StatusOK, JSON{
-		Status: "success",
-		Users:  users,
+	g.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"users":  users,
 	})
 }

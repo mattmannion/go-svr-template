@@ -16,9 +16,9 @@ func UpdateUser(c *gin.Context) {
 
 	err := c.BindJSON(&body)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.JSON_MSG{
-			Status:  "failure",
-			Message: fmt.Sprintf("%s...", err),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failure",
+			"message": fmt.Sprintf("%s...", err),
 		})
 		return
 	}
@@ -27,18 +27,18 @@ func UpdateUser(c *gin.Context) {
 
 	res := db.DB.First(&user, id)
 	if res.Error != nil {
-		c.JSON(http.StatusBadRequest, models.JSON_MSG{
-			Status:  "failure",
-			Message: fmt.Sprintf("%s...", res.Error),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failure",
+			"message": fmt.Sprintf("%s...", res.Error),
 		})
 		return
 	}
 
 	ID, str_err := strconv.Atoi(id)
 	if str_err != nil {
-		c.JSON(http.StatusBadRequest, models.JSON_MSG{
-			Status:  "failure",
-			Message: fmt.Sprintf("%s...", str_err),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failure",
+			"message": fmt.Sprintf("%s...", str_err),
 		})
 		return
 	}
@@ -49,8 +49,8 @@ func UpdateUser(c *gin.Context) {
 
 	db.DB.Save(&user)
 
-	c.JSON(http.StatusOK, models.JSON{
-		Status: "success",
-		User:   user,
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+		"user":   user,
 	})
 }
