@@ -20,7 +20,7 @@ func DeleteUser(c *gin.Context) {
 			"status":  "Failure",
 			"message": fmt.Sprintf("%s", res.Error),
 		})
-		return
+		c.Abort()
 	}
 
 	db.DB.Delete(&user)

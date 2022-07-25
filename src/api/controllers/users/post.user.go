@@ -18,7 +18,7 @@ func PostUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", err),
 		})
-		return
+		c.Abort()
 	}
 
 	var user models.Users
@@ -33,7 +33,7 @@ func PostUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", res.Error),
 		})
-		return
+		c.Abort()
 	}
 
 	c.JSON(http.StatusCreated, gin.H{

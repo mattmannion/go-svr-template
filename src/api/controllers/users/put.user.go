@@ -20,7 +20,7 @@ func UpdateUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", err),
 		})
-		return
+		c.Abort()
 	}
 
 	var user models.Users
@@ -31,7 +31,7 @@ func UpdateUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", res.Error),
 		})
-		return
+		c.Abort()
 	}
 
 	ID, str_err := strconv.Atoi(id)
@@ -40,7 +40,7 @@ func UpdateUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", str_err),
 		})
-		return
+		c.Abort()
 	}
 
 	user.ID = (uint(ID))

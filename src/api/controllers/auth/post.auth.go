@@ -20,7 +20,7 @@ func PostAuth(c *gin.Context) {
 			"status":  "failure",
 			"message": "Please enter a Username and Password",
 		})
-		return
+		c.Abort()
 	}
 
 	session := sessions.Default(c)
@@ -33,7 +33,7 @@ func PostAuth(c *gin.Context) {
 			"status":  "failure",
 			"message": "Please enter a Username and Password",
 		})
-		return
+		c.Abort()
 	}
 
 	db.DB.Find(&user, &models.Users{Username: body.Username, Password: body.Password})
@@ -42,7 +42,7 @@ func PostAuth(c *gin.Context) {
 			"status":  "failure",
 			"message": "Username or Password not found",
 		})
-		return
+		c.Abort()
 	}
 
 	if id != nil {
@@ -50,7 +50,7 @@ func PostAuth(c *gin.Context) {
 			"status":  "success",
 			"message": fmt.Sprintf("%v is already logged in", user.Username),
 		})
-		return
+		c.Abort()
 	}
 
 	id = (uuid.New()).String()

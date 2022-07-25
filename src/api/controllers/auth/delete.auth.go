@@ -19,7 +19,7 @@ func DeleteAuth(c *gin.Context) {
 			"status":  "success",
 			"message": "No User logged in",
 		})
-		return
+		c.Abort()
 	}
 
 	session.Clear()

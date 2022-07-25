@@ -20,7 +20,7 @@ func GetUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", res.Error),
 		})
-		return
+		c.Abort()
 	}
 
 	c.JSON(http.StatusOK, gin.H{
