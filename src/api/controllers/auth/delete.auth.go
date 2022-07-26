@@ -11,10 +11,9 @@ import (
 func DeleteAuth(c *gin.Context) {
 	session := sessions.Default(c)
 
-	id := session.Get("id")
 	username := session.Get("username")
 
-	if id == nil {
+	if username == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "success",
 			"message": "No User logged in",
@@ -22,7 +21,7 @@ func DeleteAuth(c *gin.Context) {
 		return
 	}
 
-	session.Options(sessions.Options{MaxAge: 0})
+	// session.Options(env.Cookie().Del_Cookie)
 
 	session.Clear()
 
@@ -32,4 +31,5 @@ func DeleteAuth(c *gin.Context) {
 		"status":  "success",
 		"message": fmt.Sprintf("%v logged out", username),
 	})
+
 }

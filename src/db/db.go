@@ -8,7 +8,6 @@ import (
 	"root/src/env"
 	"root/src/util"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,11 +19,7 @@ var DB *gorm.DB
 func Init(cfg env.Cfg) redis.Store {
 	session_store, err := redis.NewStore(10, "tcp", cfg.Redis_Addr, "", []byte(cfg.Redis_Secret))
 
-	if cfg.Env == "dev" {
-		session_store.Options(sessions.Options{Secure: false, HttpOnly: false, MaxAge: 604800})
-	} else {
-		session_store.Options(sessions.Options{Secure: true, HttpOnly: false, MaxAge: 604800})
-	}
+	session_store.Options(env.Cookie().Set_Cookie)
 
 	if err != nil {
 		fmt.Println(err)

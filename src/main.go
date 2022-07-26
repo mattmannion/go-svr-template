@@ -18,7 +18,7 @@ func main() {
 
 	svr := gin.New()
 
-	svr.Use(gin.Logger())
+	// svr.Use(gin.Logger())
 	svr.Use(gin.Recovery())
 
 	svr.SetTrustedProxies([]string{""})

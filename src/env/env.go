@@ -3,6 +3,7 @@ package env
 import (
 	"fmt"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/spf13/viper"
 )
 
@@ -32,4 +33,23 @@ func LoadConfig() Cfg {
 	}
 
 	return CFG
+}
+
+type Cookies struct {
+	Set_Cookie sessions.Options
+	Del_Cookie sessions.Options
+}
+
+func Cookie() Cookies {
+	dev := false
+	if CFG.Env == "dev" {
+		dev = false
+	} else {
+		dev = true
+	}
+
+	return Cookies{
+		Set_Cookie: sessions.Options{Secure: dev, HttpOnly: dev, MaxAge: 604800},
+		Del_Cookie: sessions.Options{MaxAge: 0},
+	}
 }
