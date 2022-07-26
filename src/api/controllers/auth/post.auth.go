@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"root/src/db"
 	"root/src/db/models"
+	"root/src/util"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -20,10 +21,11 @@ func PostAuth(c *gin.Context) {
 			"status":  "failure",
 			"message": "Please enter a Username and Password",
 		})
-		c.Abort()
+		return
 	}
 
 	session := sessions.Default(c)
+
 	id := session.Get("id")
 
 	user := &models.Users{}
@@ -33,16 +35,29 @@ func PostAuth(c *gin.Context) {
 			"status":  "failure",
 			"message": "Please enter a Username and Password",
 		})
-		c.Abort()
+		return
 	}
 
-	db.DB.Find(&user, &models.Users{Username: body.Username, Password: body.Password})
+	db.DB.Find(&user, &models.Users{Username: body.Username})
 	if user.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "failure",
-			"message": "Username or Password not found",
+			"message": "Username not found",
 		})
-		c.Abort()
+		return
+	}
+
+	if !util.CheckHash(body.Password, user.Password) {
+
+		session.Clear()
+
+		session.Save()
+
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  "failure",
+			"message": "Incorrect Password",
+		})
+		return
 	}
 
 	if id != nil {
@@ -50,7 +65,7 @@ func PostAuth(c *gin.Context) {
 			"status":  "success",
 			"message": fmt.Sprintf("%v is already logged in", user.Username),
 		})
-		c.Abort()
+		return
 	}
 
 	id = (uuid.New()).String()

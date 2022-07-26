@@ -19,8 +19,10 @@ func DeleteAuth(c *gin.Context) {
 			"status":  "success",
 			"message": "No User logged in",
 		})
-		c.Abort()
+		return
 	}
+
+	session.Options(sessions.Options{MaxAge: 0})
 
 	session.Clear()
 

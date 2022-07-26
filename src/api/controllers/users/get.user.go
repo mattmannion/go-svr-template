@@ -20,11 +20,16 @@ func GetUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", res.Error),
 		})
-		c.Abort()
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
-		"user":   user,
+		"user": models.JsonUser{
+			ID:        user.ID,
+			Firstname: user.Firstname,
+			Lastname:  user.Lastname,
+			Email:     user.Email,
+		},
 	})
 }

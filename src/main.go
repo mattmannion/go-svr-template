@@ -11,11 +11,8 @@ import (
 )
 
 func main() {
-	cfg, err := env.LoadConfig()
 
-	if err != nil {
-		fmt.Println(err)
-	}
+	cfg := env.LoadConfig()
 
 	gin.SetMode(gin.ReleaseMode)
 
@@ -34,4 +31,5 @@ func main() {
 
 	fmt.Println("live @ http://localhost" + cfg.Port)
 	svr.Run(cfg.Port)
+
 }

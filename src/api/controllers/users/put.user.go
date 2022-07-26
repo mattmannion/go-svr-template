@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"root/src/db"
 	"root/src/db/models"
+	"root/src/util"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ func UpdateUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", err),
 		})
-		c.Abort()
+		return
 	}
 
 	var user models.Users
@@ -31,26 +32,33 @@ func UpdateUser(c *gin.Context) {
 			"status":  "failure",
 			"message": fmt.Sprintf("%s...", res.Error),
 		})
-		c.Abort()
+		return
 	}
 
-	ID, str_err := strconv.Atoi(id)
-	if str_err != nil {
+	ID, err := strconv.Atoi(id)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "failure",
-			"message": fmt.Sprintf("%s...", str_err),
+			"message": fmt.Sprintf("%s...", err),
 		})
-		c.Abort()
+		return
 	}
 
 	user.ID = (uint(ID))
-	user.FirstName = body.FirstName
-	user.LastName = body.LastName
+	user.Firstname = body.Firstname
+	user.Lastname = body.Lastname
+	user.Email = body.Email
+	user.Password = util.Hash(body.Password)
 
 	db.DB.Save(&user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
-		"user":   user,
+		"user": models.JsonUser{
+			ID:        user.ID,
+			Firstname: user.Firstname,
+			Lastname:  user.Lastname,
+			Email:     user.Email,
+		},
 	})
 }

@@ -1,6 +1,8 @@
 package env
 
 import (
+	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -13,19 +15,21 @@ type Cfg struct {
 	Redis_Secret string `mapstructure:"REDIS_SECRET"`
 }
 
-func LoadConfig() (c Cfg, err error) {
+var CFG Cfg
+
+func LoadConfig() Cfg {
 	viper.SetConfigFile("./src/env/.env")
 
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 	if err != nil {
-		return
+		fmt.Println(err)
 	}
 
-	err = viper.Unmarshal(&c)
+	err = viper.Unmarshal(&CFG)
 
 	if err != nil {
-		return
+		fmt.Println(err)
 	}
 
-	return
+	return CFG
 }
