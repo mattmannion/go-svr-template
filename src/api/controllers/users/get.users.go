@@ -11,30 +11,61 @@ import (
 
 func GetUsers(c *gin.Context) {
 
-	var users []models.Users
+	id := c.Query("id")
 
-	res := db.DB.Select("id", "firstname", "lastname", "email", "username").Order("id").Find(&users)
-	if res.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  "failure",
-			"message": fmt.Sprintf("%s...", res.Error),
+	// Gets one user
+	if id != "" {
+
+		var user models.Users
+
+		res := db.DB.First(&user, id)
+		if res.Error != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  "failure",
+				"message": fmt.Sprintf("%s...", res.Error),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"status": "success",
+			"user": models.JsonUser{
+				ID:        user.ID,
+				Firstname: user.Firstname,
+				Lastname:  user.Lastname,
+				Email:     user.Email,
+			},
 		})
-		return
+
+		// Gets all users
+	} else {
+
+		var users []models.Users
+
+		res := db.DB.Select("id", "firstname", "lastname", "email", "username").Order("id").Find(&users)
+		if res.Error != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  "failure",
+				"message": fmt.Sprintf("%s...", res.Error),
+			})
+			return
+		}
+
+		var jsonUsers []models.JsonUser
+
+		for _, user := range users {
+			jsonUsers = append(jsonUsers, models.JsonUser{
+				ID:        user.ID,
+				Firstname: user.Firstname,
+				Lastname:  user.Lastname,
+				Email:     user.Email,
+			})
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"status": "success",
+			"users":  jsonUsers,
+		})
 	}
 
-	var jsonUsers []models.JsonUser
-
-	for _, user := range users {
-		jsonUsers = append(jsonUsers, models.JsonUser{
-			ID:        user.ID,
-			Firstname: user.Firstname,
-			Lastname:  user.Lastname,
-			Email:     user.Email,
-		})
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"users":  jsonUsers,
-	})
 }

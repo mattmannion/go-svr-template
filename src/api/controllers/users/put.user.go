@@ -12,7 +12,16 @@ import (
 )
 
 func UpdateUser(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Query("id")
+
+	if id == "" {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  "failure",
+			"message": "Please specify a url query of 'id'",
+		})
+		return
+	}
+
 	body := models.Users{}
 
 	err := c.BindJSON(&body)

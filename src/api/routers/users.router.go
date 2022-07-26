@@ -7,21 +7,12 @@ import (
 
 func (r *router) UserRouter() {
 
-	u := r.eng.Group("/users")
-	{
-		u.GET("", users.GetUsers)
-		u.POST("", users.PostUser)
+	usrs := r.eng.Group("/users")
+	usrs.GET("", users.GetUsers)
+	usrs.POST("", users.PostUser)
 
-		id := u.Group("/:id")
-		{
-			id.GET("", users.GetUser)
-			id_auth := id.Group("")
-
-			id_auth.Use(middleware.Auth)
-			{
-				id_auth.PUT("", users.UpdateUser)
-				id_auth.DELETE("", users.DeleteUser)
-			}
-		}
-	}
+	usrs_auth := usrs.Group("")
+	usrs_auth.Use(middleware.Auth)
+	usrs_auth.PUT("", users.UpdateUser)
+	usrs_auth.DELETE("", users.DeleteUser)
 }
