@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"root/src/api/middleware"
 	"root/src/api/routers"
 	"root/src/db"
 	"root/src/env"
@@ -11,25 +12,25 @@ import (
 )
 
 func main() {
-
 	cfg := env.LoadConfig()
 
 	gin.SetMode(gin.ReleaseMode)
 
-	svr := gin.New()
+	s := gin.New()
 
-	// svr.Use(gin.Logger())
-	svr.Use(gin.Recovery())
+	// s.Use(gin.Logger())
+	s.Use(gin.Recovery())
 
-	svr.SetTrustedProxies([]string{""})
+	s.SetTrustedProxies([]string{""})
 
 	session_store := db.Init(cfg)
 
-	svr.Use(sessions.Sessions(cfg.Session_Name, session_store))
+	s.Use(sessions.Sessions(cfg.Session_Name, session_store))
 
-	routers.Routers(svr)
+	s.Use(middleware.Logger)
+
+	routers.Routers(s)
 
 	fmt.Println("live @ http://localhost" + cfg.Port)
-	svr.Run(cfg.Port)
-
+	s.Run(cfg.Port)
 }

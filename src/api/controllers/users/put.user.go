@@ -45,10 +45,21 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	user.ID = (uint(ID))
-	user.Firstname = body.Firstname
-	user.Lastname = body.Lastname
-	user.Email = body.Email
-	user.Password = util.Hash(body.Password)
+	if body.Firstname != "" {
+		user.Firstname = body.Firstname
+	}
+
+	if body.Lastname != "" {
+		user.Lastname = body.Lastname
+	}
+
+	if body.Email != "" {
+		user.Email = body.Email
+	}
+
+	if body.Password != "" {
+		user.Password = util.Hash(body.Password)
+	}
 
 	db.DB.Save(&user)
 
