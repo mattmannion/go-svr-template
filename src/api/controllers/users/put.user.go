@@ -6,21 +6,14 @@ import (
 	"root/src/db"
 	"root/src/db/models"
 	"root/src/util"
-	"strconv"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func UpdateUser(c *gin.Context) {
-	id := c.Query("id")
-
-	if id == "" {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  "failure",
-			"message": "Please specify a url query of 'id'",
-		})
-		return
-	}
+	session := sessions.Default(c)
+	username := fmt.Sprint(session.Get("username"))
 
 	body := models.Users{}
 
@@ -35,25 +28,8 @@ func UpdateUser(c *gin.Context) {
 
 	var user models.Users
 
-	res := db.DB.First(&user, id)
-	if res.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "failure",
-			"message": fmt.Sprintf("%s...", res.Error),
-		})
-		return
-	}
+	db.DB.First(&user, &models.Users{Username: username})
 
-	ID, err := strconv.Atoi(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "failure",
-			"message": fmt.Sprintf("%s...", err),
-		})
-		return
-	}
-
-	user.ID = (uint(ID))
 	if body.Firstname != "" {
 		user.Firstname = body.Firstname
 	}
@@ -79,6 +55,7 @@ func UpdateUser(c *gin.Context) {
 			Firstname: user.Firstname,
 			Lastname:  user.Lastname,
 			Email:     user.Email,
+			Username:  user.Username,
 		},
 	})
 }

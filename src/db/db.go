@@ -8,16 +8,20 @@ import (
 	"root/src/env"
 	"root/src/util"
 
-	"github.com/gin-contrib/sessions/redis"
+	rds "github.com/gin-contrib/sessions/redis"
+	"github.com/gomodule/redigo/redis"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
+var RDB redis.Conn
 
-func Init(cfg env.Cfg) redis.Store {
-	session_store, err := redis.NewStore(10, "tcp", cfg.Redis_Addr, "", []byte(cfg.Redis_Secret))
+func Init(cfg env.Cfg) rds.Store {
+	session_store, err := rds.NewStore(10, "tcp", cfg.Redis_Addr, "", []byte(cfg.Redis_Secret))
+	rdb, _ := redis.Dial("tcp", ":6379")
+	RDB = rdb
 
 	session_store.Options(env.Cookie().Set_Cookie)
 

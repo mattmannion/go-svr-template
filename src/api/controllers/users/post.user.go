@@ -79,6 +79,7 @@ func PostUser(c *gin.Context) {
 			Firstname: user.Firstname,
 			Lastname:  user.Lastname,
 			Email:     user.Email,
+			Username:  user.Username,
 		},
 	})
 }

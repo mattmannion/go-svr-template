@@ -34,6 +34,7 @@ func GetUsers(c *gin.Context) {
 				Firstname: user.Firstname,
 				Lastname:  user.Lastname,
 				Email:     user.Email,
+				Username:  user.Username,
 			},
 		})
 
@@ -59,6 +60,7 @@ func GetUsers(c *gin.Context) {
 				Firstname: user.Firstname,
 				Lastname:  user.Lastname,
 				Email:     user.Email,
+				Username:  user.Username,
 			})
 		}
 

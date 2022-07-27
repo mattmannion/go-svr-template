@@ -6,35 +6,33 @@ import (
 	"root/src/db"
 	"root/src/db/models"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func DeleteUser(c *gin.Context) {
-	id := c.Query("id")
-
-	if id == "" {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  "failure",
-			"message": "Please specify a url query of 'id'",
-		})
-		return
-	}
+	session := sessions.Default(c)
+	username := fmt.Sprint(session.Get("username"))
 
 	var user models.Users
 
-	res := db.DB.First(&user, id)
+	res := db.DB.First(&user, &models.Users{Username: username})
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "Failure",
-			"message": fmt.Sprintf("%s", res.Error),
+			"message": fmt.Sprint(res.Error),
 		})
 		return
 	}
 
 	db.DB.Delete(&user)
 
+	session.Clear()
+
+	session.Save()
+
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "Success",
-		"message": "User " + id + " deleted",
+		"message": "User " + username + " deleted",
 	})
 }

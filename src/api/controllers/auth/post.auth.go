@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/gomodule/redigo/redis"
 )
 
 func PostAuth(c *gin.Context) {
@@ -26,6 +26,7 @@ func PostAuth(c *gin.Context) {
 
 	session := sessions.Default(c)
 
+	username := fmt.Sprint(session.Get("username"))
 	id := session.Get("id")
 
 	user := &models.Users{}
@@ -61,20 +62,43 @@ func PostAuth(c *gin.Context) {
 	}
 
 	if id != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status":  "success",
-			"message": fmt.Sprintf("%v is already logged in", user.Username),
-		})
-		return
+		if username != body.Username {
+			c.JSON(http.StatusNotAcceptable, gin.H{
+				"status":  "failure",
+				"message": fmt.Sprintf("%v is already logged in. Please log %v out and try again.", username, username),
+			})
+			return
+		} else {
+
+			c.JSON(http.StatusOK, gin.H{
+				"status":  "success",
+				"message": fmt.Sprintf("%v is already logged in", user.Username),
+			})
+			return
+		}
 	}
-
-	id = (uuid.New()).String()
-
-	session.Set("id", id)
 
 	session.Set("username", user.Username)
 
+	// creates session
 	session.Save()
+
+	val, err := redis.Values(db.RDB.Do("KEYS", "*"))
+	res, err := redis.Strings(val, err)
+	if err != nil {
+		fmt.Println("redis", err)
+	}
+
+	id = res[0]
+
+	// adds id to session
+	session.Set("id", id)
+
+	session.Save()
+
+	id = session.Get("id")
+
+	fmt.Println(id)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
