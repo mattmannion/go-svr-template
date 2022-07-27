@@ -17,6 +17,7 @@ func DeleteAuth(c *gin.Context) {
 
 	if username == nil {
 		c.JSON(http.StatusOK, gin.H{
+
 			"status":  "success",
 			"message": "No User logged in",
 		})
@@ -37,5 +38,4 @@ func DeleteAuth(c *gin.Context) {
 		"status":  "success",
 		"message": fmt.Sprintf("%v logged out", username),
 	})
-
 }

@@ -11,14 +11,14 @@ import (
 
 func GetUsers(c *gin.Context) {
 
-	id := c.Query("id")
+	username := c.Query("username")
 
 	// Gets one user
-	if id != "" {
+	if username != "" {
 
 		var user models.Users
 
-		res := db.DB.First(&user, id)
+		res := db.DB.First(&user, &models.Users{Username: username})
 		if res.Error != nil {
 			c.JSON(http.StatusNotFound, gin.H{
 				"status":  "failure",
