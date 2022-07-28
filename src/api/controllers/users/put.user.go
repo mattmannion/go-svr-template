@@ -38,10 +38,6 @@ func UpdateUser(c *gin.Context) {
 		user.Lastname = body.Lastname
 	}
 
-	if body.Email != "" {
-		user.Email = body.Email
-	}
-
 	if body.Password != "" {
 		user.Password = util.Hash(body.Password)
 	}
