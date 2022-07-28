@@ -24,7 +24,7 @@ func DeleteAuth(c *gin.Context) {
 		return
 	}
 
-	_, err := db.RDB.Do("DEL", id)
+	_, err := db.Redis.Do("DEL", id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{

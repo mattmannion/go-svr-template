@@ -78,27 +78,19 @@ func PostAuth(c *gin.Context) {
 		}
 	}
 
-	session.Set("username", user.Username)
-
 	// creates session
+	session.Set("username", user.Username)
+	session.Set("permissions", user.Permissions)
 	session.Save()
 
-	val, err := redis.Values(db.RDB.Do("KEYS", "*"))
-	res, err := redis.Strings(val, err)
-	if err != nil {
-		fmt.Println("redis", err)
-	}
+	val, err := redis.Values(db.Redis.Do("keys", "*"))
+	res, _ := redis.Strings(val, err)
 
 	id = res[0]
 
 	// adds id to session
 	session.Set("id", id)
-
 	session.Save()
-
-	id = session.Get("id")
-
-	fmt.Println(id)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",

@@ -1,4 +1,4 @@
-package users
+package admin
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostUser(c *gin.Context) {
+func PostAdmin(c *gin.Context) {
 	body := models.Users{}
 
 	err := c.BindJSON(&body)
@@ -62,7 +62,7 @@ func PostUser(c *gin.Context) {
 	user.Email = body.Email
 	user.Username = body.Username
 	user.Password = util.Hash(body.Password)
-	user.Permissions = "user"
+	user.Permissions = "admin"
 
 	res := db.DB.Create(&user)
 	if res.Error != nil {

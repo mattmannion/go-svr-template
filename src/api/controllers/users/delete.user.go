@@ -13,23 +13,15 @@ import (
 func DeleteUser(c *gin.Context) {
 	session := sessions.Default(c)
 	username := fmt.Sprint(session.Get("username"))
+	id := session.Get("id")
 
 	var user models.Users
 
-	res := db.DB.First(&user, &models.Users{Username: username})
-	if res.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "Failure",
-			"message": fmt.Sprint(res.Error),
-		})
-		return
-	}
+	db.DB.First(&user, &models.Users{Username: username})
 
 	db.DB.Delete(&user)
 
-	session.Clear()
-
-	session.Save()
+	db.Redis.Do("del", id)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "Success",

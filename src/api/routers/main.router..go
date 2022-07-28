@@ -9,6 +9,7 @@ type router struct {
 func Routers(eng *gin.Engine) {
 	r := &router{eng: eng}
 
+	r.AdminRouter()
 	r.UserRouter()
 	r.AuthRouter()
 }

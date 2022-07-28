@@ -8,10 +8,15 @@ import (
 func (r *router) AuthRouter() {
 
 	a := r.eng.Group("/auth")
-	a.POST("", auth.PostAuth)
-	a.DELETE("", auth.DeleteAuth)
+	{
+		a.POST("", auth.PostAuth)
+		a.DELETE("", auth.DeleteAuth)
 
-	a_auth := a.Group("")
-	a_auth.Use(middleware.Auth)
-	a_auth.GET("", auth.GetAuth)
+		a_auth := a.Group("")
+		a_auth.Use(middleware.Auth)
+		{
+			a_auth.GET("", auth.GetAuth)
+		}
+	}
+
 }

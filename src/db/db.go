@@ -16,12 +16,12 @@ import (
 )
 
 var DB *gorm.DB
-var RDB redis.Conn
+var Redis redis.Conn
 
 func Init(cfg env.Cfg) rds.Store {
 	session_store, err := rds.NewStore(10, "tcp", cfg.Redis_Addr, "", []byte(cfg.Redis_Secret))
 	rdb, _ := redis.Dial("tcp", ":6379")
-	RDB = rdb
+	Redis = rdb
 
 	session_store.Options(env.Cookie().Set_Cookie)
 
@@ -47,9 +47,17 @@ func Init(cfg env.Cfg) rds.Store {
 
 	fmt.Println("db connected")
 
+	// flushes redis and seeds dbs
 	if cfg.Env == "dev" {
-		SeedUsers(DB)
-		fmt.Println("db seeded")
+
+		_, err := rdb.Do("flushall")
+		if err != nil {
+			fmt.Println("flush err:", err)
+		} else {
+			SeedUsers(DB)
+			fmt.Println("dbs seeded and reset")
+		}
+
 	}
 
 	return session_store
