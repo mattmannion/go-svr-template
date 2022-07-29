@@ -1,3 +1,4 @@
 pgdata
 src/env/.env
 dist/server
+.env

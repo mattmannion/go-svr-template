@@ -19,7 +19,7 @@ type Cfg struct {
 var CFG Cfg
 
 func LoadConfig() Cfg {
-	viper.SetConfigFile("./src/env/.env")
+	viper.SetConfigFile("./.env")
 
 	err := viper.ReadInConfig()
 	if err != nil {
