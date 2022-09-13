@@ -19,8 +19,9 @@ var DB *gorm.DB
 var Redis redis.Conn
 
 func Init(cfg env.Cfg) rds.Store {
-	session_store, err := rds.NewStore(10, "tcp", cfg.Redis_Addr, "", []byte(cfg.Redis_Secret))
-	rdb, _ := redis.Dial("tcp", ":6379")
+	session_store, err := rds.NewStore(10, "tcp", cfg.Redis_Addr, cfg.Redis_Pass, []byte(cfg.Redis_Secret))
+	rdb, _ := redis.Dial("tcp", ":6379", redis.DialPassword(cfg.Redis_Pass))
+
 	Redis = rdb
 
 	session_store.Options(env.Cookie().Set_Cookie)

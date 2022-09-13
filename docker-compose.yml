@@ -1,9 +1,17 @@
 version: '3.8'
 services:
+
   redis:
     container_name: redis-go
-    image: redis:6.2-alpine
-    command: redis-server
+    image: redis
+    env_file: ./src/.env
+    # command: redis-server
+
+    # command: redis-server --requirepass b5d64ee7995a60be928a189eeb294622fffa7fe3 
+    command: 
+      - /bin/sh
+      - -c
+      - redis-server --requirepass $${REDIS_PASS:?REDIS_PASS is not set} 
     volumes:
       - ./redisdata:/data
     restart: on-failure
@@ -12,10 +20,11 @@ services:
 
   postgres:
     container_name: postgres-go
-    image: postgres
+    image: postgres:alpine
+    env_file: ./src/.env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: matt
+      POSTGRES_PASSWORD: matt
       POSTGRES_DB: postgres
     volumes:
       - ./pgdata:/var/lib/data
