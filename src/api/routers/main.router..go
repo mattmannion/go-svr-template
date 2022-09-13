@@ -3,13 +3,14 @@ package routers
 import "github.com/gin-gonic/gin"
 
 type router struct {
-	eng *gin.Engine
+	eng *gin.RouterGroup
 }
 
 func Routers(eng *gin.Engine) {
-	r := &router{eng: eng}
-
-	r.AdminRouter()
-	r.UserRouter()
-	r.AuthRouter()
+	r := &router{eng: eng.Group("/api")}
+	{
+		r.AdminRouter()
+		r.UserRouter()
+		r.AuthRouter()
+	}
 }

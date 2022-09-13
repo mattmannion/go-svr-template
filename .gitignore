@@ -1,4 +1,5 @@
 pgdata
+redisdata
 src/env/.env
 dist/server
 .env

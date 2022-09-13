@@ -18,7 +18,6 @@ func (r *router) UserRouter() {
 			usrs_auth.PUT("", users.UpdateUser)
 			usrs_auth.PATCH("", users.UpdateUser)
 			usrs_auth.DELETE("", users.DeleteUser)
-
 		}
 	}
 }
