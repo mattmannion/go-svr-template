@@ -6,7 +6,7 @@
   },
   "scripts": {
     "d": "nodemon",
-    "b": "cd src/ go build -o server *.go",
-    "r": "npm run b && cd src ./server"
+    "b": "cd src && go build -o server *.go",
+    "r": "npm run b && cd src && ./server"
   }
 }
